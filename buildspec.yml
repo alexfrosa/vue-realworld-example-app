@@ -8,7 +8,6 @@ phases:
       - echo Pre build started on `date`
       - apt-get -y install python3-pip
       - pip3 install awscli --upgrade --user
-      - cd vue-realworld-example-app
       - yarn install
   build:
     commands:
@@ -22,4 +21,4 @@ phases:
       - $HOME/.local/bin/aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths '/*'
 artifacts:
   files:
-    - 'vue-realworld-example-app/dist/**/*'
+    - '**/*'
