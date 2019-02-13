@@ -1,0 +1,25 @@
+version: 0.2
+phases:
+  install:
+    commands:
+      - echo Package install started on `date`
+  pre_build:
+    commands:
+      - echo Pre build started on `date`
+      - apt-get -y install python3-pip
+      - pip3 install awscli --upgrade --user
+      - cd vue-realworld-example-app
+      - yarn install
+  build:
+    commands:
+      - echo Build started on `date`
+      - yarn run build
+      - yarn run test:unit
+  post_build:
+    commands:
+      - echo Post build started on `date`
+      - $HOME/.local/bin/aws s3 sync ./dist s3://${S3_BUCKET} --delete
+      - $HOME/.local/bin/aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths '/*'
+artifacts:
+  files:
+    - 'vue-realworld-example-app/dist/**/*'
